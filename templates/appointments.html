@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Appointments</h2>
+  <p>Book a visit from the mobile unit or manage existing appointments.</p>
+</div>
+
+<div class="appt-grid">
+  <div class="card">
+    <h3>Book a New Appointment</h3>
+    {% if success %}
+    <div class="alert alert-success">✅ {{ success }}</div>
+    {% endif %}
+    <form method="POST" action="{{ url_for('appointments_page') }}">
+      <div class="form-group">
+        <label>Service Type</label>
+        <select name="service" required>
+          <option value="">Select service...</option>
+          <option>Prenatal Check-up</option>
+          <option>Immunization</option>
+          <option>Postnatal Care</option>
+          <option>High-Risk Monitoring</option>
+          <option>Lab Tests</option>
+          <option>Health Education Session</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preferred Date</label>
+          <input type="date" name="date" required/>
+        </div>
+        <div class="form-group">
+          <label>Preferred Time</label>
+          <select name="time">
+            <option>9:00 AM</option><option>10:00 AM</option>
+            <option>11:00 AM</option><option>2:00 PM</option>
+            <option>3:00 PM</option><option>4:00 PM</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Village / Location</label>
+        <input type="text" name="location" placeholder="e.g. Khandala village, Pune district" required/>
+      </div>
+      <div class="form-group">
+        <label>Additional Notes (optional)</label>
+        <textarea name="notes" rows="3" placeholder="Any specific concerns..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-green btn-full">📅 Confirm Appointment</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Your Appointments</h3>
+    {% if appointments %}
+      {% for appt in appointments %}
+      <div class="appt-item">
+        <div class="appt-info">
+          <strong>{{ appt.service }}</strong>
+          <span>{{ appt.date }} • {{ appt.time }}</span>
+          <span>📍 {{ appt.location }}</span>
+          {% if appt.notes %}<span class="notes">📝 {{ appt.notes }}</span>{% endif %}
+        </div>
+        <span class="badge {% if appt.status == 'confirmed' %}badge-green{% else %}badge-amber{% endif %}">
+          {{ appt.status|capitalize }}
+        </span>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="empty-msg">No appointments yet. Book your first one!</p>
+    {% endif %}
+    <p class="appt-note">ℹ️ Our team will call 30 minutes before arrival.</p>
+  </div>
+</div>
+{% endblock %}

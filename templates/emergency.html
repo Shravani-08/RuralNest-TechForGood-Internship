@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Emergency Support{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2 class="red">🚨 Emergency Support</h2>
+  <p>For immediate maternal emergencies. Help is one tap away.</p>
+</div>
+
+{% if sos_sent %}
+<div class="alert alert-danger sos-alert">
+  🚨 SOS Alert Sent! Emergency team notified. Stay on the line. Help is on the way.<br>
+  <strong>ETA: ~20 minutes. Call 1800-XXX-NEST for live updates.</strong>
+</div>
+{% endif %}
+
+<div class="sos-wrap">
+  <form method="POST" action="{{ url_for('emergency') }}" id="sosForm">
+    <div class="form-group" style="max-width:400px;margin:0 auto 16px;">
+      <label>Your Current Location</label>
+      <input type="text" name="location" id="sos-location" placeholder="Village name / landmark" required/>
+    </div>
+    <input type="hidden" name="message" value="SOS Emergency Alert"/>
+    <button type="submit" class="sos-btn" onclick="return confirm('Send SOS emergency alert?')">
+      🆘<br>SOS
+    </button>
+  </form>
+  <p class="sos-hint">Press to send emergency alert to RuralNest team</p>
+</div>
+
+<div class="emer-cards">
+  <div class="emer-card">
+    <div class="emer-icon">📞</div>
+    <h4>RuralNest Helpline</h4>
+    <p>24/7 maternal emergency line</p>
+    <div class="emer-phone">1800-XXX-NEST</div>
+  </div>
+  <div class="emer-card">
+    <div class="emer-icon">🚑</div>
+    <h4>Ambulance</h4>
+    <p>National emergency ambulance</p>
+    <div class="emer-phone">108</div>
+  </div>
+  <div class="emer-card">
+    <div class="emer-icon">🏥</div>
+    <h4>Health Helpline</h4>
+    <p>District hospital referral</p>
+    <div class="emer-phone">104</div>
+  </div>
+</div>
+
+<div class="card warning-card">
+  <h3 class="red">⚠️ Warning Signs – Seek Help Immediately</h3>
+  <div class="warning-grid">
+    <span>• Heavy bleeding</span>
+    <span>• Severe headache / vision changes</span>
+    <span>• No fetal movement (&gt;12 hrs)</span>
+    <span>• High fever (&gt;101°F)</span>
+    <span>• Severe abdominal pain</span>
+    <span>• Seizures or fainting</span>
+    <span>• Difficulty breathing</span>
+    <span>• Sudden swelling of face/hands</span>
+  </div>
+</div>
+{% endblock %}

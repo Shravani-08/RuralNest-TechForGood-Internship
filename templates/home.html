@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="eyebrow">Mobile Maternal Healthcare</span>
+    <h1>RuralNest</h1>
+    <p class="hero-sub">Mobile Maternal Healthcare Unit<br>with Smart Emergency Support</p>
+    <p class="hero-desc">Quality healthcare for every mother, every village, every time.</p>
+    <div class="hero-actions">
+      <a href="{{ url_for('appointments_page') }}" class="btn btn-green">📅 Book Appointment</a>
+      <a href="{{ url_for('emergency') }}" class="btn btn-pink">🚨 Emergency Help</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <div class="van-box">
+      <span class="van-icon">🚑</span>
+      <p>RuralNest Mobile Unit</p>
+    </div>
+  </div>
+</section>
+
+<div class="pillars">
+  <div class="pillar"><strong>Accessible</strong><span>Healthcare at your doorstep</span></div>
+  <div class="pillar"><strong>Reliable</strong><span>Trained staff & modern facilities</span></div>
+  <div class="pillar"><strong>Timely</strong><span>Emergency support when you need it</span></div>
+  <div class="pillar"><strong>Trusted</strong><span>Committed to maternal well-being</span></div>
+</div>
+
+<div class="stats-row">
+  <div class="stat"><div class="stat-num">2+</div><div class="stat-lbl">Women Served</div></div>
+  <div class="stat"><div class="stat-num">2+</div><div class="stat-lbl">Villages Reached</div></div>
+  <div class="stat"><div class="stat-num">5+</div><div class="stat-lbl">Healthcare Workers</div></div>
+  <div class="stat"><div class="stat-num">98%</div><div class="stat-lbl">Patient Satisfaction</div></div>
+</div>
+
+<section class="about-section">
+  <h2>About RuralNest</h2>
+  <p>RuralNest is a Mobile Maternal Healthcare Unit designed to deliver quality maternal healthcare services directly to rural and underserved communities. By combining mobile healthcare infrastructure with digital emergency support, RuralNest ensures that mothers receive timely care regardless of their location.</p>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <strong>RuralNest</strong>
+    <p>Email: support@ruralnest.org</p>
+    <p>Improving maternal healthcare accessibility for rural communities.</p>
+    <small>© 2026 RuralNest. All Rights Reserved.</small>
+  </div>
+</footer>
+{% endblock %}

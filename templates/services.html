@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Services{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Our Services</h2>
+  <p>Comprehensive maternal healthcare delivered to your doorstep.</p>
+</div>
+
+<div class="services-grid">
+  {% set services = [
+    ("🩺","Prenatal Check-ups","Regular monitoring of mother and baby health, blood pressure, nutrition guidance, and risk assessment throughout pregnancy."),
+    ("💉","Immunization","On-site vaccination for mothers and newborns as per national immunization schedule, including tetanus and hepatitis B."),
+    ("👶","Postnatal Care","Post-delivery support including newborn screening, breastfeeding support, and maternal recovery monitoring."),
+    ("❤️","High-Risk Monitoring","Specialised monitoring for high-risk pregnancies with diabetes, hypertension, or previous complications."),
+    ("🔬","Lab Tests","On-van diagnostic tests: blood count, urine analysis, blood sugar, HIV/VDRL screening, and haemoglobin."),
+    ("📚","Health Education","Community sessions on nutrition, birth planning, family planning, and hygiene for expectant and new mothers.")
+  ] %}
+  {% for icon, name, desc in services %}
+  <div class="service-card">
+    <div class="service-icon">{{ icon }}</div>
+    <h3>{{ name }}</h3>
+    <p>{{ desc }}</p>
+    <a href="{{ url_for('appointments_page') }}" class="btn btn-outline btn-sm">Book Now</a>
+  </div>
+  {% endfor %}
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <strong>RuralNest</strong> &nbsp;|&nbsp; support@ruralnest.org &nbsp;|&nbsp; © 2026 RuralNest
+  </div>
+</footer>
+{% endblock %}

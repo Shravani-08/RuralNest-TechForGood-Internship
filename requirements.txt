@@ -1,0 +1,5 @@
+flask>=3.0.0
+easyocr>=1.7.1
+torch
+torchvision
+werkzeug>=3.0.0

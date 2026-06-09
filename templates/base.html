@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RuralNest – {% block title %}Care that reaches you{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+{% if session.phone %}
+<nav class="nav">
+  <a href="{{ url_for('home') }}" class="nav-brand">
+    <span class="logo">🌿 RuralNest</span>
+    <span class="tagline">Care that reaches you</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+    <li><a href="{{ url_for('services') }}" class="{% if request.endpoint == 'services' %}active{% endif %}">Services</a></li>
+    <li><a href="{{ url_for('appointments_page') }}" class="{% if request.endpoint == 'appointments_page' %}active{% endif %}">Appointments</a></li>
+    <li><a href="{{ url_for('emergency') }}" class="{% if request.endpoint == 'emergency' %}active{% endif %}">Emergency</a></li>
+    <li><a href="{{ url_for('health') }}" class="{% if request.endpoint == 'health' %}active{% endif %}">Health Awareness</a></li>
+    <li><a href="{{ url_for('profile') }}" class="{% if request.endpoint == 'profile' %}active{% endif %}">Profile</a></li>
+    <li><a href="{{ url_for('logout') }}" class="logout-link">Logout</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</nav>
+{% endif %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

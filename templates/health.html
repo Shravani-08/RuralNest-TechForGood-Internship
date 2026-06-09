@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Health Awareness{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h2>Health Awareness</h2>
+  <p>Evidence-based guidance for healthy pregnancy and motherhood.</p>
+</div>
+
+<div class="health-tabs">
+  <button class="htab active" onclick="switchTab('trimester', this)">By Trimester</button>
+  <button class="htab" onclick="switchTab('nutrition', this)">Nutrition</button>
+  <button class="htab" onclick="switchTab('newborn', this)">Newborn Care</button>
+  <button class="htab" onclick="switchTab('hygiene', this)">Hygiene</button>
+</div>
+
+<div id="tab-trimester" class="tab-content health-grid">
+  <div class="health-card"><h4>First Trimester (0–12 weeks)</h4><ul><li>Register for antenatal care early</li><li>Take folic acid daily (400 mcg)</li><li>Avoid alcohol, tobacco, raw foods</li><li>Get blood tests and first ultrasound</li><li>Rest and manage morning sickness</li></ul></div>
+  <div class="health-card"><h4>Second Trimester (13–26 weeks)</h4><ul><li>Anatomy scan at 18–20 weeks</li><li>Iron & calcium supplements important</li><li>Mild exercise like walking is safe</li><li>Monitor fetal movements from 20 weeks</li><li>Dental check-up recommended</li></ul></div>
+  <div class="health-card"><h4>Third Trimester (27–40 weeks)</h4><ul><li>Weekly check-ups near due date</li><li>Birth plan discussion with midwife</li><li>Watch for preeclampsia signs</li><li>Hospital bag ready by 36 weeks</li><li>Breastfeeding preparation</li></ul></div>
+  <div class="health-card"><h4>Postnatal Period</h4><ul><li>Mother's postnatal check at 6 weeks</li><li>Baby's heel prick test within 5 days</li><li>Exclusive breastfeeding for 6 months</li><li>Watch for postpartum depression signs</li><li>Family planning counselling</li></ul></div>
+</div>
+
+<div id="tab-nutrition" class="tab-content health-grid" style="display:none">
+  <div class="health-card"><h4>Key Nutrients</h4><ul><li><b>Folic acid</b> – prevents neural tube defects</li><li><b>Iron</b> – prevents anaemia (dal, spinach, meat)</li><li><b>Calcium</b> – bone development (milk, ragi)</li><li><b>Protein</b> – baby's growth (eggs, lentils)</li><li><b>Vitamin D</b> – sunlight + supplements</li></ul></div>
+  <div class="health-card"><h4>What to Eat</h4><p>Eat 5 small meals a day. Include green leafy vegetables, seasonal fruits, whole grains (jowar, bajra), dairy, eggs, and pulses. Drink 8–10 glasses of water daily. Jaggery is a good iron source.</p></div>
+  <div class="health-card"><h4>What to Avoid</h4><ul><li>Raw or undercooked meat/fish</li><li>Unpasteurised milk/cheese</li><li>Excess caffeine (&gt;200 mg/day)</li><li>Alcohol completely</li><li>Street food with poor hygiene</li></ul></div>
+  <div class="health-card"><h4>Weight Gain Guide</h4><p>Normal BMI: gain 11–16 kg total. Underweight: 12–18 kg. Overweight: 7–11 kg. Your RuralNest worker will monitor this at each visit.</p></div>
+</div>
+
+<div id="tab-newborn" class="tab-content health-grid" style="display:none">
+  <div class="health-card"><h4>First Week</h4><ul><li>Breastfeed within 1 hour of birth</li><li>Keep baby warm (kangaroo care)</li><li>Cord care: keep dry and clean</li><li>Eye drops and Vitamin K injection</li><li>BCG and Polio vaccination at birth</li></ul></div>
+  <div class="health-card"><h4>Danger Signs in Newborn</h4><ul><li>Not feeding at all</li><li>Fast breathing (&gt;60 breaths/min)</li><li>Yellow skin (jaundice) spreading</li><li>Fever or hypothermia</li><li>Convulsions</li></ul></div>
+  <div class="health-card"><h4>Immunisation Schedule</h4><ul><li>Birth: BCG, OPV, Hep B</li><li>6 weeks: DPT, OPV, Hib</li><li>10 weeks: Booster</li><li>14 weeks: Booster + IPV</li><li>9 months: Measles, Vitamin A</li></ul></div>
+  <div class="health-card"><h4>Breastfeeding Tips</h4><p>Feed on demand, 8–12 times per day. Ensure deep latch. Use both breasts each feed. No water needed for 6 months. Colostrum (first milk) is golden — never discard it.</p></div>
+</div>
+
+<div id="tab-hygiene" class="tab-content health-grid" style="display:none">
+  <div class="health-card"><h4>Hand Hygiene</h4><p>Wash hands with soap for 20 seconds before eating, after toilet, before handling baby, and after coming in from outside. This prevents 40% of neonatal infections.</p></div>
+  <div class="health-card"><h4>Safe Water & Sanitation</h4><ul><li>Boil or filter drinking water</li><li>Use clean vessels for storage</li><li>Wash fruits and vegetables well</li><li>Avoid open defecation</li><li>Use proper toilet facilities</li></ul></div>
+  <div class="health-card"><h4>Birth Hygiene</h4><ul><li>Deliver at health facility</li><li>Trained attendant at birth</li><li>Sterile cord cutting</li><li>No harmful cord applications</li><li>Clean delivery surface</li></ul></div>
+  <div class="health-card"><h4>Menstrual Hygiene</h4><ul><li>Change pads/cloth every 4–6 hours</li><li>Wash reusable cloths with soap</li><li>Dry in sunlight to kill bacteria</li><li>Dispose sanitary waste properly</li></ul></div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.htab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).style.display = 'grid';
+  btn.classList.add('active');
+}
+</script>
+{% endblock %}
