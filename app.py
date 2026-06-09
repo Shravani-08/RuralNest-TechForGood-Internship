@@ -2,12 +2,20 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import os
 import easyocr
 import re
+import sqlite3
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from pdf2image import convert_from_path
 
 app = Flask(__name__)
 app.secret_key = "ruralnest_secret_key_2026"
+
+DATABASE = "ruralnest.db"
+
+def get_db():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "pdf"}
