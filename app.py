@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from pdf2image import convert_from_path
 
+
 app = Flask(__name__)
 app.secret_key = "ruralnest_secret_key_2026"
 
