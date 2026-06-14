@@ -9,7 +9,7 @@
 </head>
 <body>
 
-{% if session.phone %}
+{% if session.get('user_id') %}
 <nav class="nav">
   <a href="{{ url_for('home') }}" class="nav-brand">
     <span class="logo">🌿 RuralNest</span>

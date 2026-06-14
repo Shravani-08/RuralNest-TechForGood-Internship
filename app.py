@@ -2,21 +2,20 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import os
 import easyocr
 import re
-import sqlite3
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from pdf2image import convert_from_path
+from models import db, User, Appointment, Emergency, AadhaarUpload
 
 
 app = Flask(__name__)
 app.secret_key = "ruralnest_secret_key_2026"
 
-DATABASE = "ruralnest.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ruralnest.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+db.init_app(app)
+
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "pdf"}
@@ -24,10 +23,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 reader = easyocr.Reader(['en', 'hi'])
 
-# ---------- In-memory data stores (replace with DB in production) ----------
-users = {}        # phone -> {name, phone, profile}
-appointments = {} # phone -> [list of appointments]
-emergencies = []  # list of emergency alerts
+
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -37,12 +33,13 @@ def login_required(f):
 
     @wraps(f)
     def decorated(*args, **kwargs):
-        phone = session.get("phone")
 
-        if not phone:
+        if "user_id" not in session:
             return redirect(url_for("login"))
 
-        if phone not in users:
+        user = User.query.get(session["user_id"])
+
+        if not user:
             session.clear()
             return redirect(url_for("login"))
 
@@ -54,7 +51,7 @@ def login_required(f):
 
 @app.route("/", methods=["GET", "POST"])
 def login():
-    if "phone" in session:
+    if "user_id" in session:
         return redirect(url_for("home"))
     error = None
     if request.method == "POST":
@@ -65,18 +62,19 @@ def login():
         elif not phone or len(phone) < 10:
             error = "Please enter a valid phone number."
         else:
-            if phone not in users:
-                users[phone] = {
-                    "name": name,
-                    "phone": phone,
-                    "profile": {"name": name, "phone": phone}
-                }
-                appointments[phone] = [
-                    {"service": "Prenatal Check-up", "date": "2026-06-15", "time": "10:00 AM", "location": "Nagpur Rural Camp", "status": "confirmed"},
-                    {"service": "Immunization", "date": "2026-06-22", "time": "2:00 PM", "location": "Wardha Block", "status": "pending"},
-                ]
-            session["phone"] = phone
-            session["name"] = users[phone]["name"]
+            user = User.query.filter_by(phone=phone).first()
+
+            if not user:
+                user = User(
+                    name=name,
+                    phone=phone
+                )
+
+                db.session.add(user)
+                db.session.commit()
+
+            session["user_id"] = user.id
+            session["name"] = user.name
             return redirect(url_for("home"))
     return render_template("login.html", error=error)
 
@@ -90,86 +88,119 @@ def logout():
 @app.route("/home")
 @login_required
 def home():
-    phone = session.get("phone")
+    user = User.query.get(session["user_id"])
 
-    if phone not in users:
+    if not user:
         session.clear()
         return redirect(url_for("login"))
-
-    user = users[phone]
     return render_template("home.html", user=user)
 
 @app.route("/services")
 @login_required
 def services():
-    user = users[session["phone"]]
-    return render_template("services.html", user=user)
+    user = User.query.get(session["user_id"])
+    return render_template("services.html", user=user) 
 
 @app.route("/appointments", methods=["GET", "POST"])
 @login_required
 def appointments_page():
-    phone = session["phone"]
-    user = users[phone]
+
+    user = User.query.get(session["user_id"])
+
     success = None
+
     if request.method == "POST":
-        svc = request.form.get("service")
-        date = request.form.get("date")
-        time = request.form.get("time")
-        location = request.form.get("location", "").strip()
-        notes = request.form.get("notes", "").strip()
-        if svc and date and location:
-            appointments[phone].insert(0, {
-                "service": svc,
-                "date": date,
-                "time": time,
-                "location": location,
-                "notes": notes,
-                "status": "confirmed"
-            })
-            success = f"Appointment for '{svc}' booked on {date} at {time}."
-    appt_list = appointments.get(phone, [])
-    return render_template("appointments.html", user=user, appointments=appt_list, success=success)
+
+        appointment = Appointment(
+            user_id=user.id,
+            service=request.form.get("service"),
+            date=request.form.get("date"),
+            time=request.form.get("time"),
+            location=request.form.get("location"),
+            notes=request.form.get("notes")
+        )
+
+        db.session.add(appointment)
+        db.session.commit()
+
+        success = "Appointment booked successfully."
+
+    appt_list = Appointment.query.filter_by(
+    user_id=user.id
+    ).order_by(Appointment.id.desc()).all()
+
+    return render_template(
+        "appointments.html",
+        user=user,
+        appointments=appt_list,
+        success=success
+    )
 
 @app.route("/emergency", methods=["GET", "POST"])
 @login_required
 def emergency():
-    user = users[session["phone"]]
+
+    user = User.query.get(session["user_id"])
+
     sos_sent = False
+
     if request.method == "POST":
-        alert = {
-            "user": user["name"],
-            "phone": user["phone"],
-            "timestamp": datetime.now().strftime("%d %b %Y, %H:%M"),
-            "location": request.form.get("location", "Not provided"),
-            "message": request.form.get("message", "SOS Alert"),
-        }
-        emergencies.append(alert)
+
+        emergency = Emergency(
+            user_id=user.id,
+            location=request.form.get("location"),
+            message=request.form.get("message")
+        )
+
+        db.session.add(emergency)
+        db.session.commit()
+
         sos_sent = True
-    return render_template("emergency.html", user=user, sos_sent=sos_sent)
+
+    return render_template(
+        "emergency.html",
+        user=user,
+        sos_sent=sos_sent
+    )
 
 @app.route("/health")
 @login_required
 def health():
-    user = users[session["phone"]]
+    user = User.query.get(session["user_id"])
     return render_template("health.html", user=user)
 
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    phone = session["phone"]
-    user = users[phone]
-    success = None
-    if request.method == "POST":
-        fields = ["name","dob","aadhaar_number","gender","address","blood_group","edd","pregnancy_status","phone"]
-        for f in fields:
-            val = request.form.get(f, "").strip()
-            if val:
-                user["profile"][f] = val
-        users[phone] = user
-        session["name"] = user["profile"].get("name", user["name"])
-        success = "Profile saved successfully!"
-    return render_template("profile.html", user=user, profile=user.get("profile", {}), success=success)
 
+    user = User.query.get(session["user_id"])
+
+    success = None
+
+    if request.method == "POST":
+
+        user.name = request.form.get("name")
+        user.dob = request.form.get("dob")
+        user.aadhaar_number = request.form.get("aadhaar_number")
+        user.gender = request.form.get("gender")
+        user.address = request.form.get("address")
+        user.phone = request.form.get("phone")
+        user.blood_group = request.form.get("blood_group")
+        user.edd = request.form.get("edd")
+        user.pregnancy_status = request.form.get("pregnancy_status")
+
+        db.session.commit()
+
+        session["name"] = user.name
+
+        success = "Profile saved successfully!"
+
+    return render_template(
+        "profile.html",
+        user=user,
+        profile=user,
+        success=success
+    )
 # ======================= OCR API =======================
 
 @app.route("/api/ocr", methods=["POST"])
@@ -258,6 +289,22 @@ def ocr():
             "gender": gender,
             "address": address
         }
+        user = User.query.get(session["user_id"])
+
+        upload = AadhaarUpload(
+            user_id=user.id,
+            filename=filename,
+            extracted_name=data["name"],
+            extracted_dob=data["dob"],
+            extracted_gender=data["gender"],
+            extracted_aadhaar=data["aadhaar_number"],
+            extracted_address=data["address"]
+        )
+
+        print("Saving upload...")
+        db.session.add(upload)
+        db.session.commit()
+        print("Upload saved")
 
         return jsonify({
             "success": True,
@@ -269,6 +316,11 @@ def ocr():
             "error": str(e)
         }), 500
 
+
 if __name__ == "__main__":
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+    with app.app_context():
+        db.create_all()
+
     app.run(debug=True, port=5000)

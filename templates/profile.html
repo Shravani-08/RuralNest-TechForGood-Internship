@@ -49,9 +49,14 @@
         </div>
         <div class="form-group">
           <label>Date of Birth</label>
-          <input type="date" name="dob" id="p-dob" value="{{ profile.dob or '' }}"/>
+          <input
+            type="text"
+            name="dob"
+            id="p-dob"
+            value="{{ profile.dob or '' }}"
+            placeholder="DD-MM-YYYY"
+          />
         </div>
-      </div>
       <div class="form-row">
         <div class="form-group">
           <label>Aadhaar Number</label>
@@ -89,7 +94,12 @@
       <div class="form-row">
         <div class="form-group">
           <label>Expected Delivery Date</label>
-          <input type="date" name="edd" value="{{ profile.edd or '' }}"/>
+          <input
+            type="text"
+            name="edd"
+            value="{{ profile.edd or '' }}"
+            placeholder="DD-MM-YYYY"
+          />
         </div>
         <div class="form-group">
           <label>Pregnancy Status</label>
