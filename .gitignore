@@ -1,0 +1,4 @@
+ruralnest.db
+instance/
+__pycache__/
+.venv/
