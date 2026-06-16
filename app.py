@@ -146,10 +146,15 @@ def emergency():
 
     if request.method == "POST":
 
+        message = request.form.get(
+            "message",
+            "SOS Emergency Alert"
+        )
+
         emergency = Emergency(
             user_id=user.id,
-            location=request.form.get("location"),
-            message=request.form.get("message")
+            location="Not Provided",
+            message=message
         )
 
         db.session.add(emergency)

@@ -6,6 +6,22 @@
   <p>Evidence-based guidance for healthy pregnancy and motherhood.</p>
 </div>
 
+<button
+    class="btn btn-green"
+    onclick="readHealthTips()">
+
+    🔊 Listen (English)
+
+</button>
+
+<button
+    class="btn btn-pink"
+    onclick="readHindiTips()">
+
+    🔊 सुनें (Hindi)
+
+</button>
+
 <div class="health-tabs">
   <button class="htab active" onclick="switchTab('trimester', this)">By Trimester</button>
   <button class="htab" onclick="switchTab('nutrition', this)">Nutrition</button>
@@ -52,3 +68,35 @@ function switchTab(tab, btn) {
 }
 </script>
 {% endblock %}
+
+<script>
+
+function readHealthTips() {
+
+    const text =
+        document.querySelector('.tab-content:not([style*="display:none"])')
+        .innerText;
+
+    const speech =
+        new SpeechSynthesisUtterance(text);
+
+    speech.lang = "en-IN";
+
+    window.speechSynthesis.speak(speech);
+}
+
+function readHindiTips() {
+
+    const speech =
+        new SpeechSynthesisUtterance(
+
+        "गर्भावस्था के दौरान नियमित जांच कराएं। पर्याप्त पानी पिएं। आयरन और कैल्शियम युक्त भोजन लें। किसी भी गंभीर समस्या होने पर तुरंत RuralNest सहायता प्राप्त करें।"
+
+        );
+
+    speech.lang = "hi-IN";
+
+    window.speechSynthesis.speak(speech);
+}
+
+</script>

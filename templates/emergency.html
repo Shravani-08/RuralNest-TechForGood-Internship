@@ -13,19 +13,41 @@
 </div>
 {% endif %}
 
-<div class="sos-wrap">
-  <form method="POST" action="{{ url_for('emergency') }}" id="sosForm">
-    <div class="form-group" style="max-width:400px;margin:0 auto 16px;">
-      <label>Your Current Location</label>
-      <input type="text" name="location" id="sos-location" placeholder="Village name / landmark" required/>
-    </div>
-    <input type="hidden" name="message" value="SOS Emergency Alert"/>
-    <button type="submit" class="sos-btn" onclick="return confirm('Send SOS emergency alert?')">
-      🆘<br>SOS
+<form method="POST" class="emergency-form">
+
+  <div class="form-group">
+    <label>Emergency Message</label>
+
+    <textarea
+        id="message"
+        name="message"
+        rows="4"
+        placeholder="Describe your emergency here..."></textarea>
+  </div>
+
+  <div class="emergency-actions">
+
+    <button
+        type="button"
+        class="btn btn-green"
+        onclick="startVoiceInput()">
+
+        🎤 Speak (English / Hindi)
+
     </button>
-  </form>
-  <p class="sos-hint">Press to send emergency alert to RuralNest team</p>
-</div>
+
+    <button
+        type="submit"
+        class="sos-btn"
+        onclick="return confirm('Send SOS emergency alert?')">
+
+        🆘 SOS
+
+    </button>
+
+  </div>
+
+</form>
 
 <div class="emer-cards">
   <div class="emer-card">
@@ -61,4 +83,43 @@
     <span>• Sudden swelling of face/hands</span>
   </div>
 </div>
+
+{% block scripts %}
+
+<script>
+
+function startVoiceInput() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Voice recognition not supported.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "hi-IN";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+        document.getElementById("message").value =
+            text;
+    };
+
+    recognition.onerror = function(event) {
+        alert("Voice Error: " + event.error);
+    };
+}
+
+</script>
+{% endblock %}
 {% endblock %}
