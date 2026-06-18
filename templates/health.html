@@ -60,43 +60,50 @@
 {% endblock %}
 {% block scripts %}
 <script>
+
 function switchTab(tab, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.htab').forEach(b => b.classList.remove('active'));
+
   document.getElementById('tab-' + tab).style.display = 'grid';
   btn.classList.add('active');
 }
-</script>
-{% endblock %}
 
-<script>
+function getCurrentTabText() {
+
+  const activeTab =
+      document.querySelector('.tab-content:not([style*="display:none"])');
+
+  return activeTab ? activeTab.innerText : "";
+}
 
 function readHealthTips() {
 
-    const text =
-        document.querySelector('.tab-content:not([style*="display:none"])')
-        .innerText;
+  window.speechSynthesis.cancel();
 
-    const speech =
-        new SpeechSynthesisUtterance(text);
+  const speech =
+      new SpeechSynthesisUtterance(getCurrentTabText());
 
-    speech.lang = "en-IN";
+  speech.lang = "en-IN";
+  speech.rate = 1;
 
-    window.speechSynthesis.speak(speech);
+  window.speechSynthesis.speak(speech);
 }
 
 function readHindiTips() {
 
-    const speech =
-        new SpeechSynthesisUtterance(
+  window.speechSynthesis.cancel();
 
-        "गर्भावस्था के दौरान नियमित जांच कराएं। पर्याप्त पानी पिएं। आयरन और कैल्शियम युक्त भोजन लें। किसी भी गंभीर समस्या होने पर तुरंत RuralNest सहायता प्राप्त करें।"
+  const speech =
+      new SpeechSynthesisUtterance(
+        "गर्भावस्था के दौरान नियमित जांच कराएं। पर्याप्त पानी पिएं। आयरन और कैल्शियम युक्त भोजन लें। स्वस्थ आहार लें और किसी भी आपातकालीन स्थिति में तुरंत RuralNest सहायता प्राप्त करें।"
+      );
 
-        );
+  speech.lang = "hi-IN";
+  speech.rate = 1;
 
-    speech.lang = "hi-IN";
-
-    window.speechSynthesis.speak(speech);
+  window.speechSynthesis.speak(speech);
 }
 
 </script>
+{% endblock %} 
