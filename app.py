@@ -4,7 +4,7 @@ import easyocr
 import re
 from werkzeug.utils import secure_filename
 from datetime import datetime
-from pdf2image import convert_from_path
+#from pdf2image import convert_from_path
 from models import db, User, Appointment, Emergency, AadhaarUpload
 
 
@@ -225,11 +225,11 @@ def ocr():
 
     ext = filename.rsplit(".", 1)[1].lower()
 
-    if ext == "pdf":
-        pages = convert_from_path(filepath) 
-        image_path = filepath.replace(".pdf", ".jpg")
-        pages[0].save(image_path, "JPEG")
-        filepath = image_path
+#    if ext == "pdf":
+#        pages = convert_from_path(filepath) 
+ #       image_path = filepath.replace(".pdf", ".jpg")
+  #      pages[0].save(image_path, "JPEG")
+   #     filepath = image_path
 
     try:
         results = reader.readtext(filepath, detail=0)
