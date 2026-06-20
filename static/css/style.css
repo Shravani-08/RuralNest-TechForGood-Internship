@@ -1,29 +1,41 @@
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; color: #1a1a1a; background: #f5f7f5; line-height: 1.6; }
+body {
+  font-family: "DM Sans", sans-serif;
+  color: var(--text);
+  background: var(--background);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+} 
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; }
 
 /* ===== CSS VARS ===== */
 :root {
-  --green: #2E7D4F;
-  --green-light: #e8f5ee;
-  --green-mid: #3d9a62;
-  --pink: #e06b96;
-  --pink-deep: #c0395f;
-  --pink-light: #fdf0f5;
-  --red: #e53935;
-  --red-light: #fef0f0;
-  --amber-light: #fff8e6;
-  --amber: #a06b00;
-  --border: #e0e8e0;
-  --card-bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #6b7280;
-  --radius: 10px;
-  --radius-lg: 14px;
-}
+  --green: #1f5d4a;
+  --green-dark: #123d31;
+  --green-light: #dcebe4;
+  --green-mid: #3f8067;
 
+  --pink: #d7655d;
+  --pink-deep: #c75049;
+  --pink-light: #fff0ed;
+
+  --red: #c8403b;
+  --red-light: #fff0ed;
+
+  --amber: #95620a;
+  --amber-light: #fff7df;
+
+  --border: #dfe7e2;
+  --card-bg: #ffffff;
+  --background: #fbfaf6;
+  --text: #17231e;
+  --muted: #66736d;
+
+  --radius: 14px;
+  --radius-lg: 20px;
+}
 /* ===== NAV ===== */
 .nav {
   background: var(--card-bg);
@@ -322,5 +334,39 @@ img { max-width: 100%; }
   .sos-alert { margin: 12px 16px; } 
   .login-card { padding: 28px 20px; }
 }
+
+.card,
+.service-card,
+.health-card,
+.emer-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(22, 62, 48, 0.07);
+}
+
+.service-card:hover,
+.health-card:hover,
+.emer-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(22, 62, 48, 0.10);
+}
+
+.btn {
+  border-radius: 12px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.btn-green {
+  background: var(--green);
+  box-shadow: 0 9px 20px rgba(31, 93, 74, 0.18);
+}
+
+.btn-green:hover {
+  background: var(--green-dark);
+}
+
+.btn-pink {
+  background: var(--pink);
+} 
 
 
