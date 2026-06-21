@@ -6,4 +6,4 @@ torch
 torchvision
 pillow
 gunicorn
-pdf2image
+pdf2image 
